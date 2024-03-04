@@ -9,7 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class CustomImageView extends StatelessWidget {
   ///[imagePath] is required parameter for showing image
   String? imagePath;
-
+  File? imageFile;
   double? height;
   double? width;
   Color? color;
@@ -25,6 +25,7 @@ class CustomImageView extends StatelessWidget {
   /// it will shows the placeholder image if image is not found on network image
   CustomImageView({
     this.imagePath,
+    this.imageFile,
     this.height,
     this.width,
     this.color,
@@ -104,7 +105,7 @@ class CustomImageView extends StatelessWidget {
           );
         case ImageType.file:
           return Image.file(
-            File(imagePath!),
+            imageFile!,
             height: height,
             width: width,
             fit: fit ?? BoxFit.cover,
@@ -142,6 +143,14 @@ class CustomImageView extends StatelessWidget {
             color: color,
           );
       }
+    } else if (imageFile != null) {
+      return Image.file(
+        imageFile!,
+        height: height,
+        width: width,
+        fit: fit ?? BoxFit.cover,
+        color: color,
+      );
     }
     return SizedBox();
   }

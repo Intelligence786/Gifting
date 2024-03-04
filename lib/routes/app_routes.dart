@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gifting/presentation/main_screen/main_screen.dart';
 import 'package:gifting/presentation/onboarding_screen/onboarding_screen.dart';
 import 'package:gifting/presentation/onboarding_screen/welcome_screen/welcome_screen.dart';
+import 'package:gifting/presentation/person_screen/add_person_screen.dart';
 import 'package:gifting/presentation/settings_screen/settings_screen.dart';
 
 class AppRoutes {
@@ -9,6 +10,7 @@ class AppRoutes {
   static const String welcomeScreen = '/welcome_screen';
   static const String mainScreen = '/main_screen';
   static const String settingsScreen = '/settings_screen';
+  static const String addPersonScreen = '/add_person_screen';
 
   static const String initialRoute = '/initialRoute';
 
@@ -17,5 +19,6 @@ class AppRoutes {
         welcomeScreen: WelcomeScreen.builder,
         mainScreen: MainScreen.builder,
         settingsScreen: SettingsScreen.builder,
+        addPersonScreen: AddPersonScreen.builder,
       };
 }
