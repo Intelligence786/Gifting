@@ -7,20 +7,24 @@ import '../eventModel/event_model.dart';
 
 part 'person_model.g.dart';
 
-@JsonSerializable()
+
+@JsonSerializable(explicitToJson: true)
 class Person {
+  String id;
   String name;
   String whoIsForYou;
   int age;
   String photo;
-  List<EventModel> events;
+  List<String> eventsIndexes;
 
   Person(
-      {required this.name,
+      {
+        required this.id,
+        required this.name,
       required this.whoIsForYou,
       required this.age,
       required this.photo,
-      required this.events});
+      required this.eventsIndexes});
 
   factory Person.fromJson(Map<String, dynamic> json) => _$PersonFromJson(json);
 

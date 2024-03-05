@@ -7,20 +7,22 @@ part of 'event_model.dart';
 // **************************************************************************
 
 EventModel _$EventModelFromJson(Map<String, dynamic> json) => EventModel(
+      id: json['id'] as String,
       name: json['name'] as String,
-      date: json['date'] as String,
+      date: DateTime.parse(json['date'] as String),
       willThereBeCelebration: json['willThereBeCelebration'] as bool,
       gifts: (json['gifts'] as List<dynamic>)
           .map((e) => Gift.fromJson(e as Map<String, dynamic>))
           .toList(),
-      person: Person.fromJson(json['person'] as Map<String, dynamic>),
+      personIndex: json['personIndex'] as String,
     );
 
 Map<String, dynamic> _$EventModelToJson(EventModel instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'name': instance.name,
-      'date': instance.date,
+      'date': instance.date.toIso8601String(),
       'willThereBeCelebration': instance.willThereBeCelebration,
-      'gifts': instance.gifts,
-      'person': instance.person,
+      'gifts': instance.gifts.map((e) => e.toJson()).toList(),
+      'personIndex': instance.personIndex,
     };

@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'gift_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class Gift {
   String giftName;
   double price;

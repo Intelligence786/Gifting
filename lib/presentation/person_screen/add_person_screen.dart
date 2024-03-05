@@ -8,6 +8,7 @@ import 'package:gifting/data/data_manager.dart';
 import 'package:gifting/widgets/custom_elevated_button.dart';
 import 'package:gifting/widgets/custom_icon_button.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../data/models/personModel/person_model.dart';
 import '../../widgets/app_bar/appbar_leading_image.dart';
@@ -169,11 +170,12 @@ class _AddPersonScreenState extends State<AddPersonScreen> {
               List<int>? imageBytes = image?.readAsBytesSync();
               String base64Image = base64Encode(imageBytes ?? []);
               Person pers = Person(
+                id: Uuid().v4(),
                 name: nameController.value.text,
                 whoIsForYou: whoisController.value.text,
                 age: int.parse(ageController.value.text),
                 photo: base64Image,
-                events: [],
+                eventsIndexes: [],
               );
               await DataManager.savePerson(pers);
 
@@ -184,6 +186,8 @@ class _AddPersonScreenState extends State<AddPersonScreen> {
       ),
     );
   }
+
+
 
   Future pickImage() async {
     try {
@@ -214,9 +218,7 @@ class _AddPersonScreenState extends State<AddPersonScreen> {
           controller: controller,
           textStyle: theme.textTheme.bodyLarge,
           textInputType: type,
-          validator: (value) {
-            setState(() {});
-          },
+
         ),
       ],
     );

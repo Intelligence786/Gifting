@@ -14,7 +14,6 @@ Future<void> main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   initScreen = await prefs.getInt("initScreen") ?? 0;
   await prefs.setInt("initScreen", 1);
-
   //var status = await Permission.storage.request();
   Future.wait([
     SystemChrome.setPreferredOrientations([
@@ -22,6 +21,7 @@ Future<void> main() async {
     ]),
     PrefUtils().init()
   ]).then((value) {
+    //prefs.clear();
     runApp(MyApp());
   });
 }

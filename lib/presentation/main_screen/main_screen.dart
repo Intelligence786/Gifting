@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gifting/core/app_export.dart';
 import 'package:gifting/presentation/main_screen/main_bloc/main_bloc.dart';
+import 'package:gifting/presentation/main_screen/widgets/event_widget_item.dart';
+import 'package:gifting/presentation/main_screen/widgets/person_widget_item.dart';
 import 'package:gifting/widgets/custom_elevated_button.dart';
 
 import '../../widgets/app_bar/appbar_subtitle.dart';
@@ -46,7 +48,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _buildContent(BuildContext context, MainLoadedState state) {
-    if (state.eventList.isEmpty && state.personList.isEmpty)
+    if (state.personList.isEmpty)
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.h, vertical: 20.v),
         child: Column(
@@ -94,105 +96,126 @@ class _MainScreenState extends State<MainScreen> {
     else
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.h, vertical: 20.v),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Persons',
-                  style: theme.textTheme.titleMedium
-                      ?.copyWith(color: appTheme.gray700),
-                ),
-                InkWell(
-                  onTap: () {},
-                  child: Text(
-                    'View All',
-                    style: theme.textTheme.titleMedium,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 10.v,
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: isPersonListExpanded ? state.personList.length : 1,
-                itemBuilder: (context, index) {
-                  return Container(
-                    height: 80.h,
-                    padding: EdgeInsets.all(10.h),
-                    decoration: AppDecoration.surface.copyWith(
-                      borderRadius: BorderRadius.circular(8.h),
-                    ),
-                    child: Row(
-                      //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Container(
-                          width: 60.h,
-                          height: 60.v,
-                          child:ClipRRect(
-                            borderRadius: BorderRadius.circular(8.h),
-                            child: Image.memory(
-                              base64Decode(state.personList[index].photo),
-                              fit: BoxFit.fitWidth,
-                            ),
-                          ),
-                        ),
-                        /*  CustomImageView(
-                          imageFile:
-                          base64ToFile(, 'example$index.jpg'),
-                        ),*/
-
-                        Padding(
-                          padding: EdgeInsets.only(left: 11.h),
-                          //width: 106.h,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                child: Text(
-                                  state.personList[index].name,
-                                  style: theme.textTheme.headlineSmall,
-                                ),
-                              ),
-                              Row(
-
-                                children: [
-                                  Container(
-                                    child: Text(
-                                      state.personList[index].whoIsForYou,
-//                                  textAlign: TextAlign.end,
-                                      style: theme.textTheme.titleMedium,
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Text(
-                                      '  |  ${state.personList[index].age} y.o.',
-//                                  textAlign: TextAlign.end,
-                                      style: theme.textTheme.titleMedium
-                                          ?.copyWith(color: appTheme.gray700),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              _buildPersonsList(context, state),
+              SizedBox(
+                height: 40.v,
               ),
-            ),
-            CustomElevatedButton(text: 'Add person')
-          ],
+              _buildEventList(context, state)
+            ],
+          ),
         ),
       );
+  }
+
+  //Persons
+  Widget _buildPersonsList(BuildContext context, MainLoadedState state) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Persons',
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(color: appTheme.gray700),
+            ),
+            InkWell(
+              onTap: () {
+                setState(() {
+                  isPersonListExpanded = !isPersonListExpanded;
+                });
+              },
+              child: Text(
+                'View All',
+                style: theme.textTheme.titleMedium,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 10.v,
+        ),
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: isPersonListExpanded ? state.personList.length : 1,
+          itemBuilder: (context, index) {
+            return PersonWidgetItem(
+              person: state.personList[index],
+              events: state.eventList,
+            );
+          },
+        ),
+        SizedBox(
+          height: 10.v,
+        ),
+        CustomElevatedButton(
+          text: 'Add person',
+          onPressed: () {
+            NavigatorService.pushNamed(AppRoutes.addPersonScreen);
+          },
+        )
+      ],
+    );
+  }
+
+  //Events
+  Widget _buildEventList(BuildContext context, MainLoadedState state) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Events',
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(color: appTheme.gray700),
+            ),
+            InkWell(
+              onTap: () {
+                setState(() {
+                  isEventListExpanded = !isEventListExpanded;
+                });
+              },
+              child: Text(
+                'View All',
+                style: theme.textTheme.titleMedium,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 10.v,
+        ),
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: isEventListExpanded || state.eventList.isEmpty
+              ? state.eventList.length
+              : 1,
+          itemBuilder: (context, index) {
+            return EventWidgetItem(
+              event: state.eventList[index],
+              persons: state.personList,
+            );
+          },
+        ),
+        SizedBox(
+          height: 10.v,
+        ),
+        CustomElevatedButton(
+          text: 'Add event',
+          onPressed: () {
+            NavigatorService.pushNamed(AppRoutes.addEventScreen,
+                arguments: state.personList);
+          },
+        )
+      ],
+    );
   }
 
   File base64ToFile(String base64String, String fileName) {

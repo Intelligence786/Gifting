@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../core/app_export.dart';
 
 class CustomTextFormField extends StatelessWidget {
@@ -26,6 +27,11 @@ class CustomTextFormField extends StatelessWidget {
     this.fillColor,
     this.filled = true,
     this.validator,
+    this.readOnly = false,
+    this.onTap,
+    this.onChanged,
+    this.onEditingFocus,
+    this.initialValue = null,
   }) : super(
           key: key,
         );
@@ -72,7 +78,15 @@ class CustomTextFormField extends StatelessWidget {
 
   final bool? filled;
 
+  final bool readOnly;
+
   final FormFieldValidator<String>? validator;
+
+  final Function? onTap;
+
+  final Function(String)? onChanged;
+  final Function()? onEditingFocus;
+  final String? initialValue;
 
   @override
   Widget build(BuildContext context) {
@@ -99,8 +113,16 @@ class CustomTextFormField extends StatelessWidget {
           maxLines: maxLines ?? 1,
           decoration: decoration,
           validator: validator,
+          readOnly: readOnly,
+          onChanged: onChanged,
+          onEditingComplete: onEditingFocus,
+          onTap: () {
+            onTap?.call();
+          },
+          initialValue: initialValue,
         ),
       );
+
   InputDecoration get decoration => InputDecoration(
         hintText: hintText ?? "",
         hintStyle: hintStyle ?? CustomTextStyles.titleMediumOnPrimary,

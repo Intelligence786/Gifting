@@ -11,13 +11,21 @@ class DataManager {
 
   static Future<void> savePerson(Person person) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String key = _personKeyPrefix + person.name;
-    await prefs.setString(key, json.encode(person.toJson()));
+    final String key = _personKeyPrefix + person.id;
+
+    // Check if person already exists
+    if (prefs.containsKey(key)) {
+      // If person exists, update it
+      await prefs.setString(key, json.encode(person.toJson()));
+    } else {
+      // If person doesn't exist, save new person
+      await prefs.setString(key, json.encode(person.toJson()));
+    }
   }
 
-  static Future<Person?> getPerson(String name) async {
+  static Future<Person?> getPerson(String personId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String key = _personKeyPrefix + name;
+    final String key = _personKeyPrefix + personId;
     final String? jsonString = prefs.getString(key);
     if (jsonString != null) {
       return Person.fromJson(json.decode(jsonString));
@@ -25,15 +33,33 @@ class DataManager {
     return null;
   }
 
+  // Метод для удаления Person
+  static Future<void> deletePerson(String personId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String key = _personKeyPrefix + personId;
+
+    await prefs.remove(key);
+  }
+
   static Future<void> saveEvent(EventModel event) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String key = _eventKeyPrefix + event.name;
+    final String key = _eventKeyPrefix + event.id;
+
+
     await prefs.setString(key, json.encode(event.toJson()));
   }
 
-  static Future<EventModel?> getEvent(String name) async {
+  // Метод для удаления EventModel
+  static Future<void> deleteEvent(String eventId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String key = _eventKeyPrefix + name;
+    final String key = _eventKeyPrefix + eventId;
+
+    await prefs.remove(key);
+  }
+
+  static Future<EventModel?> getEvent(String eventId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String key = _eventKeyPrefix + eventId;
     final String? jsonString = prefs.getString(key);
     if (jsonString != null) {
       return EventModel.fromJson(json.decode(jsonString));
