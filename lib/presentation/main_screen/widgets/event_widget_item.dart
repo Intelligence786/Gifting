@@ -18,7 +18,7 @@ class EventWidgetItem extends StatelessWidget {
         .fold(0, (previousValue, gift) => previousValue + gift.price);
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8.v),
-      height: 100.h,
+      height: 120.h,
       // padding: EdgeInsets.all(10.h),
       decoration: AppDecoration.surface.copyWith(
         borderRadius: BorderRadius.circular(8.h),

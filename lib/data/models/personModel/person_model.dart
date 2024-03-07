@@ -14,7 +14,7 @@ class Person {
   String name;
   String whoIsForYou;
   int age;
-  String photo;
+  String? photo;
   List<String> eventsIndexes;
 
   Person(
@@ -23,7 +23,7 @@ class Person {
         required this.name,
       required this.whoIsForYou,
       required this.age,
-      required this.photo,
+       this.photo,
       required this.eventsIndexes});
 
   factory Person.fromJson(Map<String, dynamic> json) => _$PersonFromJson(json);

@@ -151,9 +151,18 @@ class _AddEventScreenState extends State<AddEventScreen> {
                           height: 60.v,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8.h),
-                            child: Image.memory(
-                              base64Decode(person.photo),
+                            child: person.photo != null && person.photo != ''
+                                ? Image.memory(
+                              base64Decode(person.photo ?? ''),
                               fit: BoxFit.fitWidth,
+                            )
+                                : Container(
+                              padding: EdgeInsets.all(15),
+                              decoration: AppDecoration.fillBlueGray,
+                              child: CustomImageView(
+
+                                imagePath: ImageConstant.imgMaterialSymbol,
+                              ),
                             ),
                           ),
                         ),

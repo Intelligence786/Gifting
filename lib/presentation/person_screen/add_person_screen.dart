@@ -75,7 +75,10 @@ class _AddPersonScreenState extends State<AddPersonScreen> {
           SizedBox(
             height: 25.v,
           ),
-          _buildTextField(context, text: 'Age', controller: ageController, type: TextInputType.number),
+          _buildTextField(context,
+              text: 'Age',
+              controller: ageController,
+              type: TextInputType.number),
           SizedBox(
             height: 25.v,
           ),
@@ -165,10 +168,13 @@ class _AddPersonScreenState extends State<AddPersonScreen> {
           SizedBox(height: 20.v),
           CustomElevatedButton(
             text: 'Done',
-            isDisabled: image == null,
+            // isDisabled: image == null,
             onPressed: () async {
-              List<int>? imageBytes = image?.readAsBytesSync();
-              String base64Image = base64Encode(imageBytes ?? []);
+              String base64Image = '';
+              if (image != null && image != '') {
+                List<int>? imageBytes = image?.readAsBytesSync();
+                base64Image = base64Encode(imageBytes ?? []);
+              }
               Person pers = Person(
                 id: Uuid().v4(),
                 name: nameController.value.text,
@@ -186,8 +192,6 @@ class _AddPersonScreenState extends State<AddPersonScreen> {
       ),
     );
   }
-
-
 
   Future pickImage() async {
     try {
@@ -218,7 +222,6 @@ class _AddPersonScreenState extends State<AddPersonScreen> {
           controller: controller,
           textStyle: theme.textTheme.bodyLarge,
           textInputType: type,
-
         ),
       ],
     );

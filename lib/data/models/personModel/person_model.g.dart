@@ -11,7 +11,7 @@ Person _$PersonFromJson(Map<String, dynamic> json) => Person(
       name: json['name'] as String,
       whoIsForYou: json['whoIsForYou'] as String,
       age: json['age'] as int,
-      photo: json['photo'] as String,
+      photo: json['photo'] as String?,
       eventsIndexes: (json['eventsIndexes'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),

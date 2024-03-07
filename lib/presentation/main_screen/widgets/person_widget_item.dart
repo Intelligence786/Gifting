@@ -24,7 +24,8 @@ class PersonWidgetItem extends StatelessWidget {
       ),
       child: CustomElevatedButton(
         onPressed: () {
-          NavigatorService.pushNamed(AppRoutes.personInfoScreen, arguments: [person, events]);
+          NavigatorService.pushNamed(AppRoutes.personInfoScreen,
+              arguments: [person, events]);
         },
         buttonStyle: CustomButtonStyles.fillGray,
         decoration: AppDecoration.surface.copyWith(
@@ -43,10 +44,19 @@ class PersonWidgetItem extends StatelessWidget {
                   height: 60.v,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.h),
-                    child: Image.memory(
-                      base64Decode(person.photo),
-                      fit: BoxFit.fitWidth,
-                    ),
+                    child: person.photo != null && person.photo != ''
+                        ? Image.memory(
+                            base64Decode(person.photo ?? ''),
+                            fit: BoxFit.fitWidth,
+                          )
+                        : Container(
+                      padding: EdgeInsets.all(15),
+                      decoration: AppDecoration.fillBlueGray,
+                          child: CustomImageView(
+                           
+                              imagePath: ImageConstant.imgMaterialSymbol,
+                            ),
+                        ),
                   ),
                 ),
                 Padding(
