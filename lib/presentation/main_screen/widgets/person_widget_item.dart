@@ -8,10 +8,16 @@ import '../../../data/models/personModel/person_model.dart';
 import '../../../widgets/custom_elevated_button.dart';
 
 class PersonWidgetItem extends StatelessWidget {
-  final Person person;
+  final List<Person> persons;
   final List<EventModel> events;
+  final int index;
+  final bool isDisabled;
 
-  const PersonWidgetItem({key, required this.person, required this.events});
+  const PersonWidgetItem(
+      {key,
+      required this.persons,
+      required this.events,
+      this.isDisabled = false, required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +31,9 @@ class PersonWidgetItem extends StatelessWidget {
       child: CustomElevatedButton(
         onPressed: () {
           NavigatorService.pushNamed(AppRoutes.personInfoScreen,
-              arguments: [person, events]);
+              arguments: [persons, events, index]);
         },
+        isDisabled: isDisabled,
         buttonStyle: CustomButtonStyles.fillGray,
         decoration: AppDecoration.surface.copyWith(
           borderRadius: BorderRadius.circular(8.h),
@@ -44,19 +51,18 @@ class PersonWidgetItem extends StatelessWidget {
                   height: 60.v,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.h),
-                    child: person.photo != null && person.photo != ''
+                    child: persons[index].photo != null && persons[index].photo != ''
                         ? Image.memory(
-                            base64Decode(person.photo ?? ''),
+                            base64Decode(persons[index].photo ?? ''),
                             fit: BoxFit.fitWidth,
                           )
                         : Container(
-                      padding: EdgeInsets.all(15),
-                      decoration: AppDecoration.fillBlueGray,
-                          child: CustomImageView(
-                           
+                            padding: EdgeInsets.all(15),
+                            decoration: AppDecoration.fillBlueGray,
+                            child: CustomImageView(
                               imagePath: ImageConstant.imgMaterialSymbol,
                             ),
-                        ),
+                          ),
                   ),
                 ),
                 Padding(
@@ -68,7 +74,7 @@ class PersonWidgetItem extends StatelessWidget {
                     children: [
                       Container(
                         child: Text(
-                          person.name,
+                          persons[index].name,
                           style: theme.textTheme.headlineSmall,
                         ),
                       ),
@@ -76,14 +82,14 @@ class PersonWidgetItem extends StatelessWidget {
                         children: [
                           Container(
                             child: Text(
-                              person.whoIsForYou,
+                              persons[index].whoIsForYou,
 //                                  textAlign: TextAlign.end,
                               style: theme.textTheme.titleMedium,
                             ),
                           ),
                           Container(
                             child: Text(
-                              '  |  ${person.age} y.o.',
+                              '  |  ${persons[index].age} y.o.',
 //                                  textAlign: TextAlign.end,
                               style: theme.textTheme.titleMedium
                                   ?.copyWith(color: appTheme.gray700),
@@ -98,12 +104,14 @@ class PersonWidgetItem extends StatelessWidget {
             ),
           ),
         ),
-        rightIcon: Padding(
-          padding: EdgeInsets.all(10.h),
-          child: CustomImageView(
-            imagePath: ImageConstant.imgArrowRight,
-          ),
-        ),
+        rightIcon: !isDisabled
+            ? Padding(
+                padding: EdgeInsets.all(10.h),
+                child: CustomImageView(
+                  imagePath: ImageConstant.imgArrowRight,
+                ),
+              )
+            : Container(),
       ),
     );
   }

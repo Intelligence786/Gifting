@@ -7,14 +7,20 @@ import '../../../data/models/personModel/person_model.dart';
 import '../../../widgets/custom_elevated_button.dart';
 
 class EventWidgetItem extends StatelessWidget {
-  final EventModel event;
+  final List<EventModel> event;
   final List<Person> persons;
+  final bool isDisabled;
+  final int index;
 
-  const EventWidgetItem({key, required this.event, required this.persons});
+  const EventWidgetItem(
+      {key,
+      required this.event,
+      required this.persons,
+      this.isDisabled = false, required this.index});
 
   @override
   Widget build(BuildContext context) {
-    double total = event.gifts
+    double total = event[index].gifts
         .fold(0, (previousValue, gift) => previousValue + gift.price);
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8.v),
@@ -26,8 +32,9 @@ class EventWidgetItem extends StatelessWidget {
       child: CustomElevatedButton(
         onPressed: () {
           NavigatorService.pushNamed(AppRoutes.eventInfoScreen,
-              arguments: [persons, event]);
+              arguments: [persons, event, index]);
         },
+        isDisabled: isDisabled,
         buttonStyle: CustomButtonStyles.fillGray,
         decoration: AppDecoration.surface.copyWith(
           borderRadius: BorderRadius.circular(8.h),
@@ -50,24 +57,26 @@ class EventWidgetItem extends StatelessWidget {
                         children: [
                           Container(
                             child: Text(
-                              event.name,
+                              event[index].name,
                               style: theme.textTheme.headlineSmall,
                             ),
                           ),
                           Container(
                             child: Text(
-                              DateFormat('dd.MM.yyyy').format(event.date),
+                              DateFormat('dd.MM.yyyy').format(event[index].date),
                               style: theme.textTheme.bodyMedium,
                             ),
                           ),
                         ],
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(10.h),
-                        child: CustomImageView(
-                          imagePath: ImageConstant.imgArrowRight,
-                        ),
-                      ),
+                      !isDisabled
+                          ? Padding(
+                              padding: EdgeInsets.all(10.h),
+                              child: CustomImageView(
+                                imagePath: ImageConstant.imgArrowRight,
+                              ),
+                            )
+                          : Container(),
                     ],
                   ),
                 ),
@@ -81,7 +90,7 @@ class EventWidgetItem extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        event.gifts.length.toString() + ' gift',
+                        event[index].gifts.length.toString() + ' gift',
                         style: theme.textTheme.bodyMedium,
                       ),
                       Text(

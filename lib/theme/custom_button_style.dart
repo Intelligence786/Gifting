@@ -10,6 +10,7 @@ class CustomButtonStyles {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.h),
       ),
+      disabledBackgroundColor: Colors.transparent,
       shadowColor: Colors.transparent);
 
   static ButtonStyle get fillOnPrimaryContainer => ElevatedButton.styleFrom(

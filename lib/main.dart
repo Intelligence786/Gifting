@@ -21,7 +21,7 @@ Future<void> main() async {
     ]),
     PrefUtils().init()
   ]).then((value) {
-    prefs.clear();
+    //prefs.clear();
     runApp(MyApp());
   });
 }

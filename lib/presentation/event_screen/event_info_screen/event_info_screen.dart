@@ -13,15 +13,17 @@ import '../../main_screen/widgets/person_widget_item.dart';
 
 class EventInfoScreen extends StatefulWidget {
   final List<Person> persons;
-  final EventModel event;
+  final List<EventModel> events;
+  final int index;
 
-  const EventInfoScreen({key, required this.persons, required this.event});
+  const EventInfoScreen({key, required this.persons, required this.events, required this.index});
 
   static Widget builder(
-      BuildContext context, List<Person> persons, EventModel events) {
+      BuildContext context, List<Person> persons, List<EventModel> events, int index) {
     return EventInfoScreen(
       persons: persons,
-      event: events,
+      events: events,
+      index: index,
     );
   }
 
@@ -39,7 +41,7 @@ class _EventInfoScreenState extends State<EventInfoScreen> {
         child: CustomElevatedButton(
           text: 'Delete',
           onPressed: () {
-            DataManager.deleteEvent(widget.event.id);
+            DataManager.deleteEvent(widget.events[widget.index].id);
             NavigatorService.pushNamedAndRemoveUntil(AppRoutes.mainScreen);
           },
         ),
@@ -49,7 +51,12 @@ class _EventInfoScreenState extends State<EventInfoScreen> {
         padding: EdgeInsets.symmetric(horizontal: 16.h, vertical: 20.v),
         child: Column(
           children: [
-            EventWidgetItem(event: widget.event, persons: widget.persons),
+            EventWidgetItem(
+              event: widget.events,
+              persons: widget.persons,
+              isDisabled: true,
+              index: widget.index,
+            ),
             SizedBox(
               height: 30.v,
             ),
@@ -66,7 +73,7 @@ class _EventInfoScreenState extends State<EventInfoScreen> {
             ),
             ListView.builder(
               shrinkWrap: true,
-              itemCount: widget.event.gifts.length,
+              itemCount: widget.events[widget.index].gifts.length,
               itemBuilder: (context, index) {
                 return Container(
                   margin: EdgeInsets.symmetric(vertical: 4.v),
@@ -79,11 +86,11 @@ class _EventInfoScreenState extends State<EventInfoScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        widget.event.gifts[index].giftName,
+                        widget.events[widget.index].gifts[index].giftName,
                         style: theme.textTheme.bodyMedium,
                       ),
                       Text(
-                        widget.event.gifts[index].price.toString() + '\$',
+                        widget.events[widget.index].gifts[index].price.toString() + '\$',
                         style: theme.textTheme.bodyMedium
                             ?.copyWith(color: theme.colorScheme.primary),
                       ),
@@ -127,9 +134,10 @@ class _EventInfoScreenState extends State<EventInfoScreen> {
               ),
             ),
             PersonWidgetItem(
-                person: widget.persons.firstWhere(
-                    (element) => element.id == widget.event.personIndex),
-                events: [widget.event]),
+              index: widget.persons.indexWhere( (element) => element.id == widget.events[widget.index].personIndex,),
+              events: widget.events,
+              persons: widget.persons,
+            ),
           ],
         ),
       ),
@@ -137,7 +145,7 @@ class _EventInfoScreenState extends State<EventInfoScreen> {
   }
 
   String getCostAmount() {
-    double total = widget.event.gifts
+    double total = widget.events[widget.index].gifts
         .fold(0, (previousValue, element) => previousValue + element.price);
 
     return total.toString();
@@ -162,8 +170,9 @@ class _EventInfoScreenState extends State<EventInfoScreen> {
               text: 'Edit',
               margin: EdgeInsets.only(left: 8.h),
               onTap: () {
-                NavigatorService.popAndPushNamed(AppRoutes.addEventScreen,
-                 );
+                NavigatorService.popAndPushNamed(
+                  AppRoutes.addEventScreen,
+                );
               },
             ),
           ),

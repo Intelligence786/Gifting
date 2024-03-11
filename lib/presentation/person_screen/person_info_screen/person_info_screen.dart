@@ -12,16 +12,19 @@ import '../../../widgets/app_bar/appbar_subtitle.dart';
 import '../../../widgets/app_bar/custom_app_bar.dart';
 
 class PersonInfoScreen extends StatefulWidget {
-  final Person person;
+  final List<Person> persons;
   final List<EventModel> events;
+  final int index;
 
-  const PersonInfoScreen({key, required this.person, required this.events});
+  const PersonInfoScreen(
+      {key, required this.persons, required this.events, required this.index});
 
-  static Widget builder(
-      BuildContext context, Person person, List<EventModel> events) {
+  static Widget builder(BuildContext context, List<Person> persons,
+      List<EventModel> events, int index) {
     return PersonInfoScreen(
-      person: person,
+      persons: persons,
       events: events,
+      index: index,
     );
   }
 
@@ -30,6 +33,18 @@ class PersonInfoScreen extends StatefulWidget {
 }
 
 class _PersonInfoScreenState extends State<PersonInfoScreen> {
+  List<EventModel> currModels = [];
+  late Person currentPerson;
+
+  @override
+  void initState() {
+    currentPerson = widget.persons[widget.index];
+    currModels = widget.events
+        .where((element) => element.personIndex == currentPerson.id)
+        .toList();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,13 +55,13 @@ class _PersonInfoScreenState extends State<PersonInfoScreen> {
           text: 'Delete',
           onPressed: () {
             List<EventModel> currentEvents = widget.events
-                .where((element) => element.personIndex == widget.person.id)
+                .where((element) => element.personIndex == currentPerson.id)
                 .toList();
             if (currentEvents.isNotEmpty)
               for (int i = 0; i < currentEvents.length; i++) {
                 DataManager.deleteEvent(currentEvents[i].id);
               }
-            DataManager.deletePerson(widget.person.id);
+            DataManager.deletePerson(currentPerson.id);
             NavigatorService.pushNamedAndRemoveUntil(AppRoutes.mainScreen);
           },
         ),
@@ -57,7 +72,12 @@ class _PersonInfoScreenState extends State<PersonInfoScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              PersonWidgetItem(person: widget.person, events: widget.events),
+              PersonWidgetItem(
+                persons: widget.persons,
+                events: widget.events,
+                isDisabled: true,
+                index: widget.index,
+              ),
               SizedBox(
                 height: 30.v,
               ),
@@ -74,13 +94,16 @@ class _PersonInfoScreenState extends State<PersonInfoScreen> {
               ),
               ListView.builder(
                 shrinkWrap: true,
-                itemCount: widget.events
-                    .where((element) => element.personIndex == widget.person.id)
-                    .length,
+                itemCount: currModels.length,
                 itemBuilder: (context, index) {
+                  /*int mainIndex =  currModels.indexWhere((element) =>
+                 element.personIndex == currentPerson.id, index);*/
+
                   return EventWidgetItem(
-                    event: widget.events[index],
-                    persons: [],
+                    event: widget.events,
+                    persons: widget.persons,
+                    index: widget.events.indexWhere(
+                        (element) => currModels[index].id == element.id),
                   );
                 },
               ),
@@ -117,7 +140,8 @@ class _PersonInfoScreenState extends State<PersonInfoScreen> {
               text: 'Edit',
               margin: EdgeInsets.only(left: 8.h),
               onTap: () {
-                NavigatorService.popAndPushNamed(AppRoutes.addPersonScreen,
+                NavigatorService.popAndPushNamed(
+                  AppRoutes.addPersonScreen,
                 );
               },
             ),

@@ -142,11 +142,14 @@ class _MainScreenState extends State<MainScreen> {
         ),
         ListView.builder(
           shrinkWrap: true,
-          itemCount: isPersonListExpanded ? state.personList.length : 1,
+          physics:const  NeverScrollableScrollPhysics(),
+          itemCount: isPersonListExpanded || state.personList.length < 5 ? state.personList.length : 5,
           itemBuilder: (context, index) {
             return PersonWidgetItem(
-              person: state.personList[index],
+              persons: state.personList,
               events: state.eventList,
+              index: index,
+
             );
           },
         ),
@@ -193,14 +196,16 @@ class _MainScreenState extends State<MainScreen> {
           height: 10.v,
         ),
         ListView.builder(
+          physics:const  NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          itemCount: isEventListExpanded || state.eventList.isEmpty
+          itemCount: isEventListExpanded || state.eventList.isEmpty || state.eventList.length < 5
               ? state.eventList.length
-              : 1,
+              : 5,
           itemBuilder: (context, index) {
             return EventWidgetItem(
-              event: state.eventList[index],
+              event: state.eventList,
               persons: state.personList,
+              index:  index,
             );
           },
         ),

@@ -38,14 +38,16 @@ class AppRoutes {
               ModalRoute.of(context)!.settings.arguments as List<Object>;
 
           // Extract the values using the keys
-          final Person person = args[0] as Person;
+          final List<Person> person = args[0] as List<Person>;
           final List<EventModel> events = args[1] as List<EventModel>;
+          final int index = args[2] as int;
 
           // Pass the values to the TestResultScreen widget
           return PersonInfoScreen.builder(
             context,
             person,
             events,
+            index
           );
         },
         eventInfoScreen: (context) {
@@ -56,10 +58,11 @@ class AppRoutes {
           // Extract the values using the keys
 
           final List<Person> persons = args[0] as List<Person>;
-          final EventModel event = args[1] as EventModel;
+          final List<EventModel> events = args[1] as List<EventModel>;
+          final int index = args[2] as int;
 
           // Pass the values to the TestResultScreen widget
-          return EventInfoScreen.builder(context, persons, event);
+          return EventInfoScreen.builder(context, persons, events, index);
         },
       };
 }
